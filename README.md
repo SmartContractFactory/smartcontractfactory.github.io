@@ -5,4 +5,5 @@ The <a href="https://smartcontractfactory.github.io">Smart Contract Factory</a> 
 Links:
 <ul>
   <li>Full code: <a href="https://github.com/SmartContractFactory/169286-final-year-project">github.com/SmartContractFactory/169286-final-year-project</a></li>
+  <li>Website URL: <a href="https://smartcontractfactory.github.io">smartcontractfactory.github.io</a></li>
 </ul>
