@@ -1,0 +1,781 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script src="https://code.iconify.design/1/1.0.0-rc6/iconify.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fork-awesome@1.1.5/css/fork-awesome.min.css" integrity="sha256-P64qV9gULPHiZTdrS1nM59toStkgjM0dsf5mK/UwBV4=" crossorigin="anonymous">
+    <title>Smart Contract Factory</title>
+    <link rel="stylesheet" type="text/css" media="all" href="./css/style.css"/>
+    <!-- Material Design Bootstrap -->
+    <link href="css/mdb.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+  </head>
+
+  <body>
+  <!-- Trigger the modal with a button -->
+  <!--<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>-->
+
+  <!-- Modals -->
+  <div class="modal fade" id="contractDeployedModal" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body" id="contractDeployedModalBody" style="font-size: 19px">
+          <p>Some text in the modal.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="modal fade" id="contractDeploymentTxModal" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body" id="transactionPendingModalBody" style="font-size: 19px">
+          Contract deployment pending... <i class="fas fa-sync fa-spin" style="margin-left:19px"></i>
+          <br>
+          <br>
+          View your <a class="txLink" href="#" target="_blank">transaction</a> on etherscan!
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+</div>
+    <div class="nav-side-menu">
+      <div class="brand"><center><img src="./imgs/logo.png" id="logo"></center></div>
+      <i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse" data-target="#menu-content"></i>
+      <div class="menu-list">
+        <ul id="menu-content" class="menu-content collapse out">
+          <div id="deployContractTab">
+            <div style="padding-left:15px">DEPLOY / INTERACT WITH CONTRACT</div>
+          </div>
+          <ul class="sub-menu" id="deployableContracts">
+            <li class="active" id="deployERC20" onClick="updateDisplay('#deploy-erc20-display')">ERC20 TOKEN</li>
+            <li class="active" id="deployAirdrop" onClick="updateDisplay('#deploy-airdrop-display')">AIRDROP</li>
+            <li class="active" id="deployICO" onClick="updateDisplay('#deploy-ico-display')">ICO</li>
+            <li class="active" id="tutorial"><a href="./tutorial/how-to-guide.html" target="_blank">TUTORIAL</a></li>
+          </ul>
+        </ul>
+      </div>
+    </div>
+
+      
+    <!--MAIN CONTAINER-->
+    <div id="main-container" > 
+      <!--<div id="particles-js" class="animation_background"></div>-->
+      <center>
+        <div id="form-container" class="container">
+          <div class="row">
+            <div class="col-lg-2 col-md-2 col-sm-1"></div>
+            <div class="col-lg-8 col-md-8 col-sm-10"  id="form-group">
+              <div>
+                <br>
+                <!--DEPLOY ERC20 TOKEN DISPLAY-->
+                <center id="deploy-erc20-display"> 
+                  <h3 style="color:white"><u>DEPLOY NEW ERC20 TOKEN</u></h3>
+                  <label class="label"><b>TOKEN NAME</b></label>
+                  <div>
+                    <input type="text" class="usr-txt-input" id="erc-name-input"  autocomplete="new-password" spellcheck="false" oninput="checkDeployERC20Inputs()">
+                  </div>
+
+                  <label class="label"><b>TOKEN SYMBOL</b></label>
+                  <div>
+                    <input type="text" class="usr-txt-input" id="erc-symbol-input"  autocomplete="new-password" spellcheck="false" oninput="checkDeployERC20Inputs()">
+                  </div>
+
+
+                  <label class="label"><b>TOTAL SUPPLY</b></label>
+                  <div>
+                    <input type="text" class="usr-txt-input" id="erc-supply-input"  autocomplete="new-password" spellcheck="false" oninput="checkDeployERC20Inputs()">
+                  </div>
+
+
+                  <label class="label"><b>DECIMALS</b></label>
+                  <div>
+                    <input type="text" class="usr-txt-input" id="erc-decimals-input"  autocomplete="new-password" spellcheck="false" oninput="checkDeployERC20Inputs()">
+                  </div>
+
+                  <div id="deploy-erc20-check-boxes">
+                    <input type="checkbox" name="makeBurnable" value="burnable" id="burnable-checkbox"> BURNABLE
+                    <input type="checkbox" name="makeMintable" value="mintable" id="mintable-checkbox" style="margin-left:13px;"> MINTABLE
+                    <button type="button" class="btn btn-primary btn-lg" id="deploy-erc20-btn" onclick="deployERC20();">DEPLOY</button>
+                  </div>
+
+                  <div><button type="button" class="btn btn-primary btn-lg" id="interact-with-erc20-btn" onClick="updateDisplay('#interact-erc20-display')">INTERACT WITH EXISTING ERC20 TOKEN</button></div>
+                </center>
+                <!--END DEPLOY ERC20 TOKEN DISPLAY-->
+
+
+                <!--INTERACT WITH ERC20 TOKEN-->
+                <center id="interact-erc20-display" style="display:none;"> 
+                  <h3 style="color:white"><u>INTERACT WITH ERC20 TOKEN</u></h3>
+                  <label class="label"><b>TOKEN ADDRESS</b></label>
+                  <div>
+                    <input type="text" oninput="getTokenInfo('#erc-address-input','#token-data-erc20')" class="usr-txt-input" id="erc-address-input"  autocomplete="new-password" spellcheck="false">
+                  </div>
+
+                  <div id="token-data-erc20"style="width: 80%; border: solid black 2px; color:white; margin:23px; border-radius:5px; text-align: left; padding:5px; display:none">
+                    <div class="row" style="display:-ms-grid">
+ 
+                      <div class="col-sm-12">
+                     
+                          <div class="container-fluid" id="token-info-container-erc20">
+
+                            <div class="row">
+                              <div class="col-sm-12" id="token-name-erc20"></div>
+                            </div>               
+
+                            <div class="row">
+                              <div class="col-sm-12" id="token-symbol-erc20"></div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-sm-12" id="token-decimals-erc20"></div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-sm-12" id="token-supply-erc20"></div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-sm-12" id="token-balance-erc20"></div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-sm-12" id="token-is-mintable-erc20"></div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-sm-12" id="token-is-burnable-erc20"></div>
+                            </div>
+                          </div>
+                          <div id="invalid-token-address-erc20" style="display:none; text-align:center">
+                            THE ADDRESS PROVIDED IS NOT ONE OF AN ERC20 TOKEN CONTRACT ON THE ROPSTEN TEST NETWORK.
+                          </div>
+                         
+                      </div>       
+                    </div>
+                  </div>
+
+
+                  <div id="erc20-functions-accordion">
+                    <button class="accordion" id="transfer-collapsable">TRANSFER</button>
+                    <div class="panel" id="transfer-panel">
+                      <div style="margin:10px">
+                        RECIPIENT ADDRESS
+                        <div style="margin-bottom:10px; margin-top:10px">
+                          <input type="text" id="recipient-of-transfer"  autocomplete="new-password" spellcheck="false" class="usr-txt-input" oninput="isValidAddr('#recipient-of-transfer')">
+                        </div>
+                        AMOUNT TO TRANSFER
+                        <div style="margin-bottom:23px; margin-top:10px">
+                          <input type="text" id="value-of-transfer"  autocomplete="new-password" spellcheck="false" class="usr-txt-input" oninput="isPositiveNumber('#value-of-transfer')">
+                        </div>
+                        <div><button type="button" class="btn btn-primary btn-lg" id="submit-erc20-transfer-btn" onClick="transfer()">SUBMIT TOKEN TRANSFER</button></div>
+                      </div>
+                    </div>
+
+
+                    <button class="accordion" id="transfer-from-collapsable">TRANSFER FROM</button>
+                    <div class="panel" id="transfer-from-panel">
+                      <div style="margin:10px">
+                        FROM ADDRESS
+                        <div style="margin-bottom:10px; margin-top:10px">
+                          <input type="text" id="from-addr-of-transfer-from"  autocomplete="new-password" spellcheck="false" class="usr-txt-input" oninput="isValidAddr('#from-addr-of-transfer-from')">
+                        </div>
+                        RECIPIENT ADDRESS
+                        <div style="margin-bottom:10px; margin-top:10px">
+                          <input type="text" id="recipient-of-transfer-from"  autocomplete="new-password" spellcheck="false" class="usr-txt-input" oninput="isValidAddr('#recipient-of-transfer-from')">
+                        </div>
+                        AMOUNT TO TRANSFER
+                        <div style="margin-bottom:23px; margin-top:10px">
+                          <input type="text" id="value-of-transfer-from"  autocomplete="new-password" spellcheck="false" class="usr-txt-input" oninput="isPositiveNumber('#value-of-transfer-from')">
+                        </div>
+                        <div><button type="button" class="btn btn-primary btn-lg" id="submit-erc20-transfer-btn" onClick="transferFrom()">SUBMIT TOKEN TRANSFER</button></div>
+                      </div>
+                    </div>
+
+
+
+                    <button class="accordion" id="approve-collapsable">APPROVE</button>
+                    <div class="panel" id="approve-panel">
+                      <div style="margin:10px">
+                        SPENDER ADDRESS
+                          <div style="margin-bottom:10px; margin-top:10px">
+                            <input type="text" id="approve-spender"  autocomplete="new-password" spellcheck="false" class="usr-txt-input" oninput="isValidAddr('#approve-spender')">
+                          </div>
+                          APPROVAL AMOUNT
+                          <div style="margin-bottom:23px; margin-top:10px">
+                            <input type="text" id="approval-amount"  autocomplete="new-password" spellcheck="false" class="usr-txt-input" oninput="isPositiveNumber('#approval-amount')">
+                          </div>
+                        <div><button type="button" class="btn btn-primary btn-lg" id="submit-erc20-approval-btn" onClick="approve()">SUBMIT APPROVAL</button></div>
+                      </div>
+                    </div>
+
+
+                    <button class="accordion" id="mint-collapsable">MINT</button>
+                    <div class="panel" id="mint-panel">
+                      <div style="margin:10px">
+                        RECIPIENT ADDRESS
+                          <div style="margin-bottom:10px; margin-top:10px">
+                            <input type="text" id="mint-recipient"  autocomplete="new-password" spellcheck="false" class="usr-txt-input" oninput="isValidAddr('#mint-recipient')">
+                          </div>
+                          TOKENS TO MINT
+                          <div style="margin-bottom:23px; margin-top:10px">
+                            <input type="text" id="tokens-to-mint"  autocomplete="new-password" spellcheck="false" class="usr-txt-input" oninput="isPositiveNumber('#tokens-to-mint')">
+                          </div>
+                        <div><button type="button" class="btn btn-primary btn-lg" id="submit-erc20-minting-btn" onClick="mintTokens()">SUBMIT TOKEN MINTING</button></div>
+                      </div>
+                    </div>
+
+                    <button class="accordion" id="burn-collapsable">BURN</button>
+                    <div class="panel" id="burn-panel">
+                      <div style="margin:10px">
+                        TOKENS TO BURN
+                        <div style="margin-bottom:23px; margin-top:10px">
+                          <input type="text" id="tokens-to-burn"  autocomplete="new-password" spellcheck="false" class="usr-txt-input" oninput="isPositiveNumber('#tokens-to-burn')">
+                        </div>
+                        <div><button type="button" class="btn btn-primary btn-lg" id="submit-erc20-burning-btn" onClick="burnTokens()">SUBMIT TOKEN BURN</button></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div><button type="button" class="btn btn-primary btn-lg" id="deploy-new-erc20-btn" onClick="updateDisplay('#deploy-erc20-display')">DEPLOY NEW ERC20 TOKEN</button></div>
+                </center>
+                <!--END OF INTERACT WITH ERC20 TOKEN-->
+
+
+
+
+                <!--DEPLOY AIRDROP CONTRACT-->
+                <center id="deploy-airdrop-display" style="display:none;"> 
+                  <h3 style="color:white"><u>DEPLOY AN AIRDROP CONTRACT</u></h3>
+                  <label class="label"><b>TOKEN ADDRESS</b></label>
+                  <div>
+                    <input type="text" oninput="getTokenInfo('#erc-address-input-airdrop-deployer','#token-data-airdrop-deploy')" class="usr-txt-input" id="erc-address-input-airdrop-deployer"  autocomplete="new-password" spellcheck="false">
+                  </div>
+
+
+                  <div id="token-data-airdrop-deploy"style="width: 80%; border: solid black 2px; color:white; margin:23px; border-radius:5px; text-align: left; padding:5px; display:none">
+                    <div class="row" style="display:-ms-grid">
+ 
+                      <div class="col-sm-12">
+                     
+                          <div class="container-fluid" id="token-info-container-airdrop-deploy">
+
+                            <div class="row">
+                              <div class="col-sm-12" id="token-name-airdrop-deploy"></div>
+                            </div>               
+
+                            <div class="row">
+                              <div class="col-sm-12" id="token-symbol-airdrop-deploy"></div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-sm-12" id="token-decimals-airdrop-deploy"></div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-sm-12" id="token-supply-airdrop-deploy"></div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-sm-12" id="token-balance-airdrop-deploy"></div>
+                            </div>
+
+  
+                          </div>
+                          <div id="invalid-token-address-airdrop-deploy" style="display:none; text-align:center">
+                            THE ADDRESS PROVIDED IS NOT ONE OF AN ERC20 TOKEN CONTRACT ON THE ROPSTEN TEST NETWORK.
+                          </div>
+                         
+                      </div>       
+                    </div>
+                  </div>
+
+                  <div><button type="button" class="btn btn-primary btn-lg" id="deploy-airdrop-btn" onClick="deployAirdrop()" style="margin-top:23px;">DEPLOY AIRDROP CONTRACT</button></div>
+
+                  <b style="color:white">OR</b>
+                  <div><button type="button" class="btn btn-primary btn-lg" id="interact-with-airdrop-btn" onClick="updateDisplay('#interact-airdrop-display')" style="margin-top:23px;">INTERACT WITH EXISTING AIRDROP CONTRACT</button></div>
+                </center>
+                <!--END OF DEPLOY AIRDROP CONTRACT-->
+
+
+
+
+                <!--INTERACT AIRDROP CONTRACT-->
+                <center id="interact-airdrop-display" style="display:none;"> 
+                  <h3 style="color:white"><u>INTERACT WITH AN AIRDROP CONTRACT</u></h3>
+                  <label class="label"><b>AIRDROP ADDRESS</b></label>
+                  <div>
+                    <input type="text" oninput="getTokenDataOfAirdropContract()" class="usr-txt-input" id="erc-address-input-airdrop-interact"  autocomplete="new-password" spellcheck="false">
+                  </div>
+                  <div id="token-data-airdrop-interact"style="width: 80%; border: solid black 2px; color:white; margin:23px; border-radius:5px; text-align: left; padding:5px; display:none">
+                    <div class="row" style="display:-ms-grid">
+
+                      <div class="col-sm-12">
+                     
+                          <div class="container-fluid" id="token-info-container-airdrop-interact">
+                            <div><u>TOKEN DETAILS OF AIRDROP CONTRACT</u></div>
+                            <br>
+                            <div class="row">
+                              <div class="col-sm-12" id="token-name-airdrop-interact"></div>
+                            </div>               
+
+                            <div class="row">
+                              <div class="col-sm-12" id="token-symbol-airdrop-interact"></div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-sm-12" id="token-decimals-airdrop-interact"></div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-sm-12" id="token-supply-airdrop-interact"></div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-sm-12" id="token-balance-airdrop-interact"></div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-sm-12" id="token-balance-of-airdrop-interact"></div>
+                            </div>
+
+                            <div class="row" style="padding-bottom:15px;padding-top:15px;">
+                              <div class="col-sm-12"><u>ADDRESS OF TOKEN:</u></div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-sm-12" id="token-address-airdrop-interact"></div>
+                            </div>
+
+
+                          </div>
+                          <div id="invalid-contract-address-airdrop-deploy" style="display:none; text-align:center">
+                            THE ADDRESS PROVIDED IS NOT ONE OF AN AIRDROP CONTRACT ON THE ROPSTEN TEST NETWORK.
+                          </div>
+                           
+                        </div>       
+                      </div>
+                  </div>
+
+
+
+
+                  <div id="airdrop-functions-accordion">
+
+
+                    <button class="accordion" id="deposit-airdrop-collapsable">AIRDROP TOKENS</button>
+                    <div class="panel" id="deposit-airdrop-panel">
+                      <div style="margin:10px">
+                        RECIPIENT ADDRESSES
+
+                        <div style="margin-bottom:23px; margin-top:10px">
+                        <textarea class="form-control shadow usr-txt-input" id="recipient_addrs" rows="7" 
+                        spellcheck="false" autocomplete="new-password" placeholder="AIRDROP TO AT LEAST 175 ADDRESSES AT A TIME. EACH ADDRESS MUST EITHER BE SEPARATED BY A COMMA, WHITESPACE OR A NEW LINE"></textarea>
+                        </div>
+
+
+                        CORRESPONDING VALUES
+                        <div style="margin-bottom:23px; margin-top:10px">
+                        <textarea class="form-control shadow usr-txt-input" id="corresponding_values" rows="7" 
+                        spellcheck="false" autocomplete="new-password" placeholder="FOR A SINGLE VALUE AIRDROP JUST ENTER ONE VALUE AND FOR A MULTI VALUE AIRDROP ENTER THE AMOUNTS OF TOKENS YOU WOULD LIKE EACH ADDRESS TO RECEIVE IN THEIR RESPECTIVE ORDER. EACH VALUE MUST EITHER BE SEPARATED BY A COMMA, WHITESPACE OR A NEW LINE"></textarea>
+                        </div>
+                        
+
+                        <div><button type="button" class="btn btn-primary btn-lg" id="submit-token-deposit-airdrop-btn" onClick="airdropTokens()">SUBMIT AIRDROP</button></div>
+                      </div>
+                    </div>
+
+
+
+                    <button class="accordion" id="deposit-airdrop-collapsable">DEPOSIT TOKENS</button>
+                    <div class="panel" id="deposit-airdrop-panel">
+                      <div style="margin:10px">
+                        AMOUNT TO DEPOSIT
+                        <div style="margin-bottom:23px; margin-top:10px">
+                          <input type="text" id="value-of-airdrop-deposit"  autocomplete="new-password" spellcheck="false" class="usr-txt-input" oninput="isPositiveNumber('#value-of-airdrop-deposit')">
+                        </div>
+                        <div><button type="button" class="btn btn-primary btn-lg" id="submit-token-deposit-airdrop-btn" onClick="airdropDeposit()">SUBMIT DEPOSIT</button></div>
+                      </div>
+                    </div>
+
+
+                    <button class="accordion" id="withdraw-airdrop-collapsable">WITHDRAW TOKENS</button>
+                    <div class="panel" id="withdraw-airdrop-panel">
+                      <div style="margin:10px">
+                        RECIPIENT ADDRESS
+                        <div style="margin-bottom:23px; margin-top:10px">
+                          <input type="text" id="recipient-of-airdrop-withdrawal"  autocomplete="new-password" spellcheck="false" class="usr-txt-input" oninput="isValidAddr('#recipient-of-airdrop-withdrawal')">
+                        </div>
+                        AMOUNT TO WITHDRAW
+                        <div style="margin-bottom:23px; margin-top:10px">
+                          <input type="text" id="value-of-airdrop-withdrawal"  autocomplete="new-password" spellcheck="false" class="usr-txt-input" oninput="isPositiveNumber('#value-of-airdrop-withdrawal')">
+                        </div>
+                        <div><button type="button" class="btn btn-primary btn-lg" id="submit-token-withdrawal-airdrop-btn" onClick="airdropWithdraw()">SUBMIT WITHDRAWAL</button></div>
+                      </div>
+                    </div>
+
+
+
+                  </div>
+                  <div><button type="button" class="btn btn-primary btn-lg" id="deploy-new-airdrop-btn" onClick="updateDisplay('#deploy-airdrop-display')" style="margin-top:23px;">DEPLOY NEW AIRDROP</button></div>
+                </center>
+                <!--END OF INTERACT AIRDROP CONTRACT-->
+
+
+
+                <!--DEPLOY ICO CONTRACT-->
+                <center id="deploy-ico-display" style="display:none;"> 
+                  <h3 style="color:white"><u>DEPLOY AN ICO CONTRACT</u></h3>
+                  <label class="label"><b>TOKEN ADDRESS</b></label>
+                  <div>
+                    <input type="text" oninput="getTokenInfo('#erc-address-input-ico-deployer','#token-data-ico-deploy')" class="usr-txt-input" id="erc-address-input-ico-deployer"  autocomplete="new-password" spellcheck="false">
+                  </div>
+
+
+                  <div id="token-data-ico-deploy"style="width: 80%; border: solid black 2px; color:white; margin:23px; margin-bottom:0px; border-radius:5px; text-align: left; padding:5px; display:none">
+                    <div class="row" style="display:-ms-grid">
+ 
+                      <div class="col-sm-12">
+                     
+                          <div class="container-fluid" id="token-info-container-ico-deploy">
+
+                            <div class="row">
+                              <div class="col-sm-12" id="token-name-ico-deploy"></div>
+                            </div>               
+
+                            <div class="row">
+                              <div class="col-sm-12" id="token-symbol-ico-deploy"></div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-sm-12" id="token-decimals-ico-deploy"></div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-sm-12" id="token-supply-ico-deploy"></div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-sm-12" id="token-balance-ico-deploy"></div>
+                            </div>
+
+  
+                          </div>
+                          <div id="invalid-token-address-ico-deploy" style="display:none; text-align:center">
+                            THE ADDRESS PROVIDED IS NOT ONE OF AN ERC20 TOKEN CONTRACT ON THE ROPSTEN TEST NETWORK.
+                          </div>
+                         
+                      </div>       
+                    </div>
+                  </div>
+
+
+                  <label class="label"><b>ETH SOFT CAP</b></label>
+                  <div style="margin-bottom:0px; margin-top:10px">
+                    <input type="text" id="eth-softcap-ico-deployer"  autocomplete="new-password" spellcheck="false" class="usr-txt-input" oninput="isPositiveNumber('#eth-softcap-ico-deployer')">
+                  </div>
+
+
+                  <label class="label"><b>EXCHANGE RATE</b></label>
+                  <div style="margin-bottom:10px; margin-top:0px">
+                    <input type="text" id="rate-ico-deployer"  autocomplete="new-password" spellcheck="false" class="usr-txt-input" oninput="isPositiveNumber('#rate-ico-deployer')">
+                  </div>
+
+
+                  <label class="label"><b>DURATION IN DAYS</b></label>
+                  <div style="margin-bottom:23px; margin-top:0px">
+                    <input type="text" id="duration-ico-deployer"  autocomplete="new-password" spellcheck="false" class="usr-txt-input" oninput="isPositiveInteger('#duration-ico-deployer')">
+                  </div>
+
+
+                  <div><button type="button" class="btn btn-primary btn-lg" id="deploy-ico-btn" onClick="deployICO()" style="margin-top:23px;">DEPLOY ICO CONTRACT</button></div>
+
+                  <b style="color:white">OR</b>
+                  <div><button type="button" class="btn btn-primary btn-lg" id="interact-with-ico-btn" onClick="updateDisplay('#interact-ico-display')" style="margin-top:23px;">INTERACT WITH EXISTING ICO CONTRACT</button></div>
+                </center>
+                <!--END OF DEPLOY ICO CONTRACT-->
+
+
+
+
+
+
+
+                <!--INTERACT WITH ICO CONTRACT-->
+                <center id="interact-ico-display" style="display:none;"> 
+                  <h3 style="color:white"><u>INTERACT WITH CONTRACT</u></h3>
+                  <label class="label"><b>ICO CONTRACT ADDRESS</b></label>
+                  <div>
+                    <input type="text" oninput="getDataOfICOContract()" class="usr-txt-input" id="ico-address-input-interact"  autocomplete="new-password" spellcheck="false">
+                  </div>
+
+                  <div id="data-of-ico"style="width: 80%; border: solid black 2px; color:white; margin:23px; border-radius:5px; text-align: left; padding:5px; display:none">
+                    <div class="row" style="display:-ms-grid">
+ 
+                      <div class="col-sm-12">
+                     
+                          <div class="container-fluid" id="info-container-ico-interact">
+
+                            <div class="row" style="padding-bottom:15px;">
+                              <div class="col-sm-12"><u>TOKEN ON SALE:</u></div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-sm-12" id="token-name-ico-interact"></div>
+                            </div>               
+
+                            <div class="row">
+                              <div class="col-sm-12" id="token-symbol-ico-interact"></div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-sm-12" id="token-decimals-ico-interact"></div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-sm-12" id="token-supply-ico-interact"></div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-sm-12" id="token-balance-ico-interact"></div>
+                            </div>
+
+
+
+                            <div class="row" style="padding-bottom:15px;padding-top:15px;">
+                              <div class="col-sm-12"><u>ADDRESS OF TOKEN:</u></div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-sm-12" id="token-address-ico-interact"></div>
+                            </div>
+
+
+                            <div class="row" style="padding-top:15px; padding-bottom:15px;">
+                              <div class="col-sm-12"><u>STATE OF ICO:</u></div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-sm-12" id="token-balance-of-ico-interact"></div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-sm-12" id="tokens-sold-ico-interact"></div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-sm-12" id="eth-funded-ico-interact"></div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-sm-12" id="eth-balance-ico-interact"></div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-sm-12" id="eth-exchange-rate-ico-interact"></div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-sm-12" id="ico-end-time">DEADLINE: 15/11/2019</div>
+                            </div>
+
+                          </div>
+                          <div id="invalid-ico-address" style="display:none; text-align:center">
+                            THE ADDRESS PROVIDED IS NOT ONE OF AN ICO CONTRACT ON THE ROPSTEN TEST NETWORK.
+                          </div>
+                         
+                      </div>       
+                    </div>
+                  </div>
+
+
+
+                  <div id="ico-functions-accordion">
+
+                    <button class="accordion" id="deposit-ico-collapsable">DEPOSIT TOKENS</button>
+                    <div class="panel" id="deposit-ico-panel">
+                      <div style="margin:10px">
+                        AMOUNT TO DEPOSIT
+                        <div style="margin-bottom:23px; margin-top:10px">
+                          <input type="text" id="value-of-ico-deposit"  autocomplete="new-password" spellcheck="false" class="usr-txt-input" oninput="isPositiveNumber('#value-of-ico-deposit')">
+                        </div>
+                        <div><button type="button" class="btn btn-primary btn-lg" id="submit-token-deposit-ico-btn" onClick="icoDepositTokens()">SUBMIT DEPOSIT</button></div>
+                      </div>
+                    </div>
+
+                    <button class="accordion" id="withdraw-ico-collapsable">WITHDRAW TOKENS</button>
+                    <div class="panel" id="withdraw-ico-panel">
+                      <div style="margin:10px">
+                        RECIPIENT ADDRESS
+                        <div style="margin-bottom:23px; margin-top:10px">
+                          <input type="text" id="recipient-of-ico-withdrawal"  autocomplete="new-password" spellcheck="false" class="usr-txt-input" oninput="isValidAddr('#recipient-of-ico-withdrawal')">
+                        </div>
+                        AMOUNT TO WITHDRAW
+                        <div style="margin-bottom:23px; margin-top:10px">
+                          <input type="text" id="value-of-ico-withdrawal"  autocomplete="new-password" spellcheck="false" class="usr-txt-input" oninput="isPositiveNumber('#value-of-ico-withdrawal')">
+                        </div>
+                        <div><button type="button" class="btn btn-primary btn-lg" id="submit-token-withdrawal-ico-btn" onClick="icoWithdrawTokens()">SUBMIT WITHDRAWAL</button></div>
+                      </div>
+                    </div>
+
+
+
+                    <button class="accordion" id="buy-tokens-ico-collapsable">BUY TOKENS</button>
+                    <div class="panel" id="buy-tokens-ico-panel">
+                      <div style="margin:10px">
+                        ETH TO SEND TO ICO
+                        <div style="margin-bottom:23px; margin-top:10px">
+                          <input type="text" id="eth-value-of-purchase-ico"  autocomplete="new-password" spellcheck="false" class="usr-txt-input" oninput="isPositiveNumber('#eth-value-of-purchase-ico');ethToTokensConverter()">
+                        </div>
+
+
+                        TOKENS YOU WILL RECEIVE
+                        <div style="margin-bottom:23px; margin-top:10px">
+                          <input type="text" id="tokens-owed-purchase-ico"  autocomplete="new-password" spellcheck="false" class="usr-txt-input" oninput="isPositiveNumber('#tokens-owed-purchase-ico');tokensToEthConverter()">
+                        </div>
+                        <div><button type="button" class="btn btn-primary btn-lg" id="submit-purchase-ico-btn" onClick="buyTokens()">SUBMIT</button></div>
+                      </div>
+                    </div>
+
+
+
+                    <button class="accordion" id="withdraw-eth-ico-collapsable">WITHDRAW ETH</button>
+                    <div class="panel" id="withdraw-eth-ico-panel">
+                      <div style="margin:10px">
+                        BY SUBMITTING THIS WITHDRAWAL ALL ETH IN THE ICO CONTRACT ADDRESS WILL GO TO YOUR ACCOUNT
+                        <div><button type="button" class="btn btn-primary btn-lg" id="submit-eth-withdrawal-ico-btn" onClick="withdrawETH()">SUBMIT WITHDRAWAL</button></div>
+                      </div>
+                    </div>
+
+
+
+
+                    <button class="accordion" id="deposit-ico-collapsable">SET NEW EXCHANGE RATE</button>
+                    <div class="panel" id="deposit-ico-panel">
+                      <div style="margin:10px">
+                        NEW EXCHANGE RATE
+                        <div style="margin-bottom:23px; margin-top:10px">
+                          <input type="text" id="value-of-new-rate-ico"  autocomplete="new-password" spellcheck="false" class="usr-txt-input" oninput="isPositiveNumber('#value-of-new-rate-ico')">
+                        </div>
+                        <div><button type="button" class="btn btn-primary btn-lg" id="submit-new-rate-ico-btn" onClick="changeRate()">SUBMIT</button></div>
+                      </div>
+                    </div>
+
+
+
+                    <button class="accordion" id="shorten-deadline-ico-collapsable">SHORTEN DEADLINE</button>
+                    <div class="panel" id="shorten-deadline-ico-panel">
+                      <div style="margin:10px">
+                        THE DEADLINE YOU SET HERE WILL BE IN DAYS STARTING FROM NOW. THE MOST YOU CAN SHORTEN THE 
+                        DEADLINE IS 24 HOURS FROM THIS CURRENT TIME.  
+                        <br><br>
+                        NEW DEADLINE 
+                        <div style="margin-bottom:23px; margin-top:10px">
+                          <input type="text" id="new-deadline-ico"  autocomplete="new-password" spellcheck="false" class="usr-txt-input" oninput="isPositiveInteger('#new-deadline-ico')">
+                        </div>
+                        <div><button type="button" class="btn btn-primary btn-lg" id="submit-new-deadline-ico-btn" onClick="shortenDeadline()">SUBMIT</button></div>
+                      </div>
+                    </div>
+
+
+
+                    <button class="accordion" id="refund-eth-ico-collapsable">GET ETH REFUND</button>
+                    <div class="panel" id="refund-eth-ico-panel">
+                      <div style="margin:10px">
+                        BY SUBMITTING THIS YOU WILL BE REFUNDED ALL THE ETH YOU INVESTED IF THE ICO
+                        HAS ENDED AND THE SOFT CAP HAS NOT BEEN REACHED OR IF THE ICO HAS BEEN CANCELED 
+                        <div><button type="button" class="btn btn-primary btn-lg" id="submit-eth-refund-ico-btn" onClick="getRefund()">CLAIM REFUND</button></div>
+                      </div>
+                    </div>
+
+
+
+                    <button class="accordion" id="refund-eth-ico-collapsable">CANCEL ICO</button>
+                    <div class="panel" id="refund-eth-ico-panel">
+                      <div style="margin:10px">
+                        BY SUBMITTING THIS YOU WILL BE CANCELLING THE ICO AND ALL ETH RAISED WILL BE 
+                        REFUNDABLE TO ALL INVESTORS. CANCELLING THE ICO IS IRREVERSIBLE. 
+                        <div><button type="button" class="btn btn-primary btn-lg" id="cancel-ico-btn" onClick="cancelICO()">SUBMIT</button></div>
+                      </div>
+                    </div>
+
+
+                  </div>
+                  <div><button type="button" class="btn btn-primary btn-lg" id="deploy-new-airdrop-btn" onClick="updateDisplay('#deploy-ico-display')" style="margin-top:23px;">DEPLOY NEW ICO</button></div>
+                </center>
+                <!--END OF INTERACT WITH ICO CONTRACT-->
+
+              </div>
+            </div>
+            <div class="col-lg-2 col-md-2 col-sm-1"></div>
+          </div>
+        </div>
+      </center>
+    </div>
+    <!--END OF MAIN CONTAINER-->
+
+    <!-- TX MODAL -->
+    <!-- To change the direction of the modal animation change .right class -->
+    <div class="modal fade right" id="txModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+      aria-hidden="true">
+
+      <!-- Add class .modal-side and then add class .modal-bottom-right (or other classes from list above) to set a position to the modal -->
+      <div class="modal-dialog modal-side modal-bottom-right" role="document">
+
+
+        <div class="modal-content" style="border: 1px solid black; border-radius:0px">
+          <div class="modal-header" style="border: 1px solid black; border-radius:0px">
+            <h4 class="modal-title w-100" id="myModalLabel">Verify Transaction</h4>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true" style="color:white">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" style="font-size:1.2rem">
+            <p><txMsg id="tx-msg">Check the status of your</txMsg> <a href="#" target="_blank" class="tx-link">transaction</a> </p>
+          </div>
+          <div class="modal-footer" style="border: 1px solid black; border-radius:0px">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- TX MODAL -->
+
+    <!--<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>-->
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <script src="./js/interactiveUI.js"></script>
+    <script src="https://cdn.rawgit.com/ethereum/web3.js/develop/dist/web3.js"></script>
+    <script src="./js/web3/metamaskChecks.js"></script>
+    <script src="./js/web3/contractFactory.js"></script>
+    <script src="./js/web3/erc20DataDisplayer.js"></script>
+    <script src="./js/web3/contract_deployers/erc20Deployer.js"></script>
+    <script src="./js/web3/contract_interactors/erc20Interactor.js"></script>
+    <script src="./js/web3/contract_deployers/airdropDeployer.js"></script>
+    <script src="./js/web3/contract_interactors/airdropInteractor.js"></script>
+    <script src="./js/web3/contract_deployers/icoDeployer.js"></script>
+    <script src="./js/web3/contract_interactors/icoInteractor.js"></script>
+  </body>
+</html>
