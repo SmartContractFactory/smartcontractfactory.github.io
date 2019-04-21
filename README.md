@@ -4,5 +4,5 @@ The <a href="https://smartcontractfactory.github.io">Smart Contract Factory</a> 
 
 Links:
 <ul>
-  <li>Full code on GitHub: <a href="https://github.com/SmartContractFactory/169286-final-year-project">github.com/SmartContractFactory/169286-final-year-project</a></li>
+  <li>Full code: <a href="https://github.com/SmartContractFactory/169286-final-year-project">github.com/SmartContractFactory/169286-final-year-project</a></li>
 </ul>
