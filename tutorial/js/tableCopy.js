@@ -13,4 +13,13 @@ function copyTableData(index) {
 	range2.selectNode(urlField2);
 	window.getSelection().addRange(range2);
 	document.execCommand('copy');
+	if(index % 2 == 0) {
+		alert("addresses copied!");
+	} else {
+		alert("values copied");
+	}
+
+    window.getSelection().empty();
+
+    window.getSelection().removeAllRanges();
 }
